@@ -485,7 +485,7 @@ In machine learning, large amounts of training data are often essential for gett
 
 Libpostal is a bit different because it's trained on open data that's available to everyone, so we've released the entire training pipeline (the [geodata](https://github.com/openvenues/libpostal/tree/master/scripts/geodata) package in this repo), as well as the resulting training data itself on the Internet Archive. It's over 100GB unzipped.
 
-Training data are stored on archive.org by the date they were created. There's also a file stored in the main directory of this repo called `current_parser_training_set` which stores the date of the most recently created training set. To always point to the latest data, try something like: ```latest=$(cat current_parser_training_set)``` and use that variable in place of the date.
+Training data are stored on archive.org by the date they were created. There's also a file stored in the main directory of this repo called `data/current_parser_training_set` which stores the date of the most recently created training set. To always point to the latest data, try something like: ```latest=$(cat data/current_parser_training_set)``` and use that variable in place of the date.
 
 ### Parser training sets ###
 All files can be found at https://archive.org/download/libpostal-parser-training-data-YYYYMMDD/$FILE as gzip'd tab-separated values (TSV) files formatted like:```language\tcountry\taddress```.

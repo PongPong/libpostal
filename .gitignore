@@ -35,15 +35,13 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
+# Distribution / packaging (Python)
 .Python
 env/
-build/
 develop-eggs/
 dist/
 downloads/
 eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -82,3 +80,74 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Autotools generated files
+autom4te.cache/
+Makefile.in
+aclocal.m4
+config.h.in
+configure
+compile
+config.guess
+config.sub
+depcomp
+install-sh
+ltmain.sh
+missing
+test-driver
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4
+
+# Autotools build artifacts
+config.h
+config.log
+config.status
+libtool
+stamp-h1
+.deps/
+.libs/
+
+# Zig build files
+zig-out/
+zig-cache/
+.zig-cache/
+*.zig.zon.lock
+
+# Java/JNI build artifacts
+*.class
+*.jar
+java/build/
+java/target/
+examples/build/
+
+# Compiled native libraries (from build scripts)
+lib/
+src/jni/*.o
+src/jni/*.dylib
+src/jni/*.so
+
+# JNI header symlinks (created during build)
+src/jni/include/
+
+# Test build files
+test_build
+test_build.zig
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Build logs
+/tmp/zig_build.log
