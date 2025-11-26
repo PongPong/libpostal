@@ -923,19 +923,19 @@ test_libpostal-test_crf_context.obj: test_crf_context.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -c -o ../src/test_libpostal-numex.obj `if test -f '../src/numex.c'; then $(CYGPATH_W) '../src/numex.c'; else $(CYGPATH_W) '$(srcdir)/../src/numex.c'; fi`
 
-../src/test_libpostal-features.o: ../src/features.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -MT ../src/test_libpostal-features.o -MD -MP -MF ../src/$(DEPDIR)/test_libpostal-features.Tpo -c -o ../src/test_libpostal-features.o `test -f '../src/features.c' || echo '$(srcdir)/'`../src/features.c
+../src/test_libpostal-features.o: ../src/libpostal_features.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -MT ../src/test_libpostal-features.o -MD -MP -MF ../src/$(DEPDIR)/test_libpostal-features.Tpo -c -o ../src/test_libpostal-features.o `test -f '../src/libpostal_features.c' || echo '$(srcdir)/'`../src/libpostal_features.c
 	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/test_libpostal-features.Tpo ../src/$(DEPDIR)/test_libpostal-features.Po
-#	$(AM_V_CC)source='../src/features.c' object='../src/test_libpostal-features.o' libtool=no \
+#	$(AM_V_CC)source='../src/libpostal_features.c' object='../src/test_libpostal-features.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -c -o ../src/test_libpostal-features.o `test -f '../src/features.c' || echo '$(srcdir)/'`../src/features.c
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -c -o ../src/test_libpostal-features.o `test -f '../src/libpostal_features.c' || echo '$(srcdir)/'`../src/libpostal_features.c
 
-../src/test_libpostal-features.obj: ../src/features.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -MT ../src/test_libpostal-features.obj -MD -MP -MF ../src/$(DEPDIR)/test_libpostal-features.Tpo -c -o ../src/test_libpostal-features.obj `if test -f '../src/features.c'; then $(CYGPATH_W) '../src/features.c'; else $(CYGPATH_W) '$(srcdir)/../src/features.c'; fi`
+../src/test_libpostal-features.obj: ../src/libpostal_features.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -MT ../src/test_libpostal-features.obj -MD -MP -MF ../src/$(DEPDIR)/test_libpostal-features.Tpo -c -o ../src/test_libpostal-features.obj `if test -f '../src/libpostal_features.c'; then $(CYGPATH_W) '../src/libpostal_features.c'; else $(CYGPATH_W) '$(srcdir)/../src/libpostal_features.c'; fi`
 	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/test_libpostal-features.Tpo ../src/$(DEPDIR)/test_libpostal-features.Po
-#	$(AM_V_CC)source='../src/features.c' object='../src/test_libpostal-features.obj' libtool=no \
+#	$(AM_V_CC)source='../src/libpostal_features.c' object='../src/test_libpostal-features.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -c -o ../src/test_libpostal-features.obj `if test -f '../src/features.c'; then $(CYGPATH_W) '../src/features.c'; else $(CYGPATH_W) '$(srcdir)/../src/features.c'; fi`
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libpostal_CFLAGS) $(CFLAGS) -c -o ../src/test_libpostal-features.obj `if test -f '../src/libpostal_features.c'; then $(CYGPATH_W) '../src/libpostal_features.c'; else $(CYGPATH_W) '$(srcdir)/../src/libpostal_features.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
