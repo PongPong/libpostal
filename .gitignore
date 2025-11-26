@@ -141,6 +141,8 @@ test_arraylist2
 configure~
 
 # Zig build artifacts
+**/.dirstamp
+*.jar
 build/
 # Build directories anywhere in the repo
 /build
