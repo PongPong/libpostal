@@ -1,4 +1,4 @@
-#include "features.h"
+#include "libpostal_features.h"
 
 
 void feature_array_add(cstring_array *features, size_t count, ...) {

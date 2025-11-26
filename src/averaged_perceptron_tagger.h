@@ -18,7 +18,7 @@ the current value.
 #include <string.h>
 
 #include "averaged_perceptron.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "tagger.h"
 #include "tokens.h"
 

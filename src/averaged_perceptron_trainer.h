@@ -36,7 +36,7 @@ Link: http://www.cs.columbia.edu/~mcollins/papers/tagperc.pdf
 #include "averaged_perceptron.h"
 #include "averaged_perceptron_tagger.h"
 #include "collections.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "string_utils.h"
 #include "tokens.h"
 #include "trie.h"

@@ -8,7 +8,7 @@
 
 #include "averaged_perceptron_tagger.h"
 #include "collections.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "ftrl.h"
 #include "logistic_regression.h"
 #include "minibatch.h"

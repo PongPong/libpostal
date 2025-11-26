@@ -23,6 +23,10 @@
 #   include <endian.h>
 #   define bswap_32 swap32
 #   define bswap_64 swap64
+#elif defined(_WIN32) || defined(_WIN64)
+#   include <stdlib.h>
+#   define bswap_32 _byteswap_ulong
+#   define bswap_64 _byteswap_uint64
 #else
 #   error "no byteswap.h or libkern/OSByteOrder.h"
 #endif

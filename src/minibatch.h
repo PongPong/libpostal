@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "collections.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "sparse_matrix.h"
 #include "trie.h"
 #include "trie_utils.h"

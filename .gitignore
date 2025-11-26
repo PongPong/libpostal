@@ -136,6 +136,10 @@ src/jni/include/
 # Test build files
 test_build
 test_build.zig
+test_arraylist
+test_arraylist2
+/build
+configure~
 
 # Maven wrapper
 .mvn/
@@ -151,4 +155,4 @@ mvnw.cmd
 .settings/
 
 # Build logs
-/tmp/zig_build.log
+/tmp/**/*.log

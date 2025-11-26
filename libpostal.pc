@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: libpostal
 Description: Fast international street address parsing and normalization using statistical NLP.
-Version: 1.1.0
+Version: 1.1.4
 Libs: -L${libdir} -lpostal
 Libs.private: 
 Cflags: -I${includedir}

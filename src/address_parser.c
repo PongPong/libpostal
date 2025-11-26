@@ -1,6 +1,6 @@
 #include "address_parser.h"
 #include "address_dictionary.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "ngrams.h"
 #include "scanner.h"
 

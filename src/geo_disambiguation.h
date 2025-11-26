@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 #include "geohash/geohash.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "geonames.h"
 #include "string_utils.h"
 

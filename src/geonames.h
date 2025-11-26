@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include "collections.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "string_utils.h"
 
 typedef enum {

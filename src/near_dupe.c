@@ -7,7 +7,7 @@
 #include "acronyms.h"
 #include "double_metaphone.h"
 #include "expand.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "float_utils.h"
 #include "normalize.h"
 #include "ngrams.h"

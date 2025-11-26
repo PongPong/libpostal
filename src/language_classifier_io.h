@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "collections.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "file_utils.h"
 #include "language_classifier.h"
 #include "scanner.h"

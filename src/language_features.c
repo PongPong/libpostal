@@ -1,7 +1,7 @@
 #include "language_features.h"
 #include "language_classifier.h"
 #include "address_dictionary.h"
-#include "features.h"
+#include "libpostal_features.h"
 #include "normalize.h"
 #include "scanner.h"
 #include "unicode_scripts.h"
