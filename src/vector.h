@@ -11,6 +11,7 @@ static inline void *aligned_malloc(size_t size, size_t alignment) {
     return _aligned_malloc(size, alignment);
 }
 static inline void *aligned_resize(void *p, size_t old_size, size_t new_size, size_t alignment) {
+    (void)old_size;  // Unused on Windows - _aligned_realloc doesn't need it
     return _aligned_realloc(p, new_size, alignment);
 }
 static inline void aligned_free(void *p) {

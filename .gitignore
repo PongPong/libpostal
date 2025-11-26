@@ -160,3 +160,6 @@ mvnw.cmd
 .project
 .classpath
 .settings/
+
+# Editor backup files
+*~
