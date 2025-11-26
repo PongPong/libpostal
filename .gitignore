@@ -138,8 +138,13 @@ test_build
 test_build.zig
 test_arraylist
 test_arraylist2
-/build
 configure~
+
+# Zig build artifacts
+build/
+# Build directories anywhere in the repo
+/build
+# Compiled build.zig binary at root
 
 # Maven wrapper
 .mvn/
@@ -153,6 +158,3 @@ mvnw.cmd
 .project
 .classpath
 .settings/
-
-# Build logs
-/tmp/**/*.log
