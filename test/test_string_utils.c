@@ -2,7 +2,7 @@
 
 #include "greatest.h"
 
-#include "../src/features.h"
+#include "../src/libpostal_features.h"
 #include "../src/scanner.h"
 #include "../src/string_utils.h"
 
