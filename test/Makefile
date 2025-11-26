@@ -131,7 +131,7 @@ test_libpostal_DEPENDENCIES = ../src/libpostal.la ../src/libscanner.la \
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-am__v_lt_1 = 
+am__v_lt_1 =
 test_libpostal_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(test_libpostal_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
@@ -143,11 +143,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
+am__v_GEN_1 =
 AM_V_at = $(am__v_at_$(V))
 am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
-am__v_at_1 = 
+am__v_at_1 =
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ../src/$(DEPDIR)/test_libpostal-features.Po \
@@ -177,7 +177,7 @@ LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CC = $(am__v_CC_$(V))
 am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
+am__v_CC_1 =
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -185,7 +185,7 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
+am__v_CCLD_1 =
 SOURCES = $(test_libpostal_SOURCES)
 DIST_SOURCES = $(test_libpostal_SOURCES)
 am__can_run_installinfo = \
@@ -431,11 +431,11 @@ AUTOCONF = ${SHELL} '/Users/clam/Projects/work/libpostal/missing' autoconf
 AUTOHEADER = ${SHELL} '/Users/clam/Projects/work/libpostal/missing' autoheader
 AUTOMAKE = ${SHELL} '/Users/clam/Projects/work/libpostal/missing' automake-1.18
 AWK = gawk
-CBLAS_LIBS = 
+CBLAS_LIBS =
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = $(CFLAGS_BASE)
-CFLAGS_SCANNER_EXTRA = 
+CFLAGS_SCANNER_EXTRA =
 CPPFLAGS = -I/opt/homebrew/opt/llvm/include
 CSCOPE = cscope
 CTAGS = ctags
@@ -444,13 +444,13 @@ DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false
 DSYMUTIL = dsymutil
-DUMPBIN = 
+DUMPBIN =
 ECHO_C = \c
-ECHO_N = 
-ECHO_T = 
+ECHO_N =
+ECHO_T =
 EGREP = /usr/bin/grep -E
 ETAGS = etags
-EXEEXT = 
+EXEEXT =
 FGREP = /usr/bin/grep -F
 FILECMD = file
 FOUND_GSHUF = yes
@@ -463,7 +463,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
 LDFLAGS = -L/opt/homebrew/opt/llvm/lib -L/usr/local/lib
-LIBOBJS = 
+LIBOBJS =
 LIBPOSTAL_DATA_DIR_VERSION_STRING = v1
 LIBPOSTAL_DATA_FILE_LATEST_VERSION = v1.0.0
 LIBPOSTAL_LANG_CLASS_MODEL_LATEST_VERSION = v1.0.0
@@ -476,16 +476,16 @@ LIBPOSTAL_SENZING_DATA_FILE_LATEST_VERSION = v1.0.0
 LIBPOSTAL_SENZING_LANG_CLASS_MODEL_LATEST_VERSION = v1.0.0
 LIBPOSTAL_SENZING_PARSER_MODEL_LATEST_VERSION = v1.0.0
 LIBPOSTAL_SO_VERSION = 1:1:0
-LIBS = 
+LIBS =
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = lipo
 LN_S = ln -s
-LTLIBOBJS = 
-LT_SYS_LIBRARY_PATH = 
+LTLIBOBJS =
+LT_SYS_LIBRARY_PATH =
 MAKEINFO = ${SHELL} '/Users/clam/Projects/work/libpostal/missing' makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /opt/homebrew/bin/gmkdir -p
-MODEL = 
+MODEL =
 NM = /usr/bin/nm -B
 NMEDIT = nmedit
 OBJDUMP = objdump
@@ -493,16 +493,16 @@ OBJEXT = o
 OTOOL = otool
 OTOOL64 = :
 PACKAGE = libpostal
-PACKAGE_BUGREPORT = 
+PACKAGE_BUGREPORT =
 PACKAGE_NAME = libpostal
 PACKAGE_STRING = libpostal 1.1.4
 PACKAGE_TARNAME = libpostal
-PACKAGE_URL = 
+PACKAGE_URL =
 PACKAGE_VERSION = 1.1.4
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SED = /opt/homebrew/bin/gsed
-SET_MAKE = 
+SET_MAKE =
 SHELL = /bin/sh
 STRIP = strip
 VERSION = 1.1.4
@@ -512,17 +512,17 @@ abs_top_builddir = /Users/clam/Projects/work/libpostal
 abs_top_srcdir = /Users/clam/Projects/work/libpostal
 ac_ct_AR = ar
 ac_ct_CC = gcc
-ac_ct_DUMPBIN = 
+ac_ct_DUMPBIN =
 am__include = include
 am__leading_dot = .
-am__quote = 
-am__rm_f_notfound = 
+am__quote =
+am__rm_f_notfound =
 am__tar = false
 am__untar = false
 am__xargs_n = xargs -n
 bindir = ${exec_prefix}/bin
 build = aarch64-apple-darwin24.6.0
-build_alias = 
+build_alias =
 build_cpu = aarch64
 build_os = darwin24.6.0
 build_vendor = apple
@@ -533,7 +533,7 @@ docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
 host = aarch64-apple-darwin24.6.0
-host_alias = 
+host_alias =
 host_cpu = aarch64
 host_os = darwin24.6.0
 host_vendor = apple
@@ -557,7 +557,7 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
 sysconfdir = ${prefix}/etc
-target_alias = 
+target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
@@ -567,7 +567,7 @@ CFLAGS_O1 = $(CFLAGS_BASE) -O1
 CFLAGS_O2 = $(CFLAGS_BASE) -O2
 CFLAGS_O3 = $(CFLAGS_BASE) -O3
 DEFAULT_INCLUDES = -I.. -I/usr/local/include
-test_libpostal_SOURCES = test.c test_expand.c test_parser.c test_transliterate.c test_numex.c test_trie.c test_string_utils.c test_crf_context.c ../src/strndup.c ../src/file_utils.c ../src/string_utils.c ../src/utf8proc/utf8proc.c ../src/trie.c ../src/trie_search.c ../src/transliterate.c ../src/numex.c ../src/features.c
+test_libpostal_SOURCES = test.c test_expand.c test_parser.c test_transliterate.c test_numex.c test_trie.c test_string_utils.c test_crf_context.c ../src/strndup.c ../src/file_utils.c ../src/string_utils.c ../src/utf8proc/utf8proc.c ../src/trie.c ../src/trie_search.c ../src/transliterate.c ../src/numex.c ../src/libpostal_features.c
 test_libpostal_LDADD = ../src/libpostal.la ../src/libscanner.la $(CBLAS_LIBS)
 test_libpostal_CFLAGS = $(CFLAGS_O3)
 all: all-am
@@ -639,7 +639,7 @@ clean-noinstPROGRAMS:
 ../src/test_libpostal-features.$(OBJEXT): ../src/$(am__dirstamp) \
 	../src/$(DEPDIR)/$(am__dirstamp)
 
-test_libpostal$(EXEEXT): $(test_libpostal_OBJECTS) $(test_libpostal_DEPENDENCIES) $(EXTRA_test_libpostal_DEPENDENCIES) 
+test_libpostal$(EXEEXT): $(test_libpostal_OBJECTS) $(test_libpostal_DEPENDENCIES) $(EXTRA_test_libpostal_DEPENDENCIES)
 	@rm -f test_libpostal$(EXEEXT)
 	$(AM_V_CCLD)$(test_libpostal_LINK) $(test_libpostal_OBJECTS) $(test_libpostal_LDADD) $(LIBS)
 
@@ -1141,7 +1141,7 @@ echo "information.  Thanks.";                                                \
 	fi;								\
 	$$success || exit 1
 
-check-TESTS: 
+check-TESTS:
 	@$(am__rm_f) $(RECHECK_LOGS)
 	@$(am__rm_f) $(RECHECK_LOGS:.log=.trs)
 	@$(am__rm_f) $(TEST_SUITE_LOG)
@@ -1150,7 +1150,7 @@ check-TESTS:
 	log_list=`echo $$log_list`; \
 	$(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_LOG) TEST_LOGS="$$log_list"; \
 	exit $$?;
-recheck: all 
+recheck: all
 	@$(am__rm_f) $(TEST_SUITE_LOG)
 	@set +e; $(am__set_TESTS_bases); \
 	bases=`for i in $$bases; do echo $$i; done \
