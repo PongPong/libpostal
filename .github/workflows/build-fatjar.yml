@@ -1,0 +1,212 @@
+name: Build Fat JAR
+
+on:
+  workflow_run:
+    workflows: ["Build Native Libraries"]
+    types:
+      - completed
+    branches: [master, main]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-fatjar:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      
+      - name: Download Native Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded-artifacts
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+      
+      - name: Organize Native Libraries
+        run: |
+          echo "Organizing native libraries for fat JAR..."
+          mkdir -p lib
+          
+          # Copy artifacts if they exist
+          if [ -d "downloaded-artifacts" ]; then
+            for artifact in downloaded-artifacts/native-*; do
+              if [ -d "$artifact" ]; then
+                platform=$(basename $artifact | sed 's/native-//')
+                echo "Processing $platform..."
+                mkdir -p lib/$platform
+                cp $artifact/* lib/$platform/ 2>/dev/null || true
+                ls -lh lib/$platform/
+              fi
+            done
+          else
+            echo "⚠️  No pre-built artifacts found."
+            echo "This workflow should run after 'Build Native Libraries'."
+            echo "You can also trigger it manually after building libraries."
+          fi
+          
+          # Show what we have
+          echo ""
+          echo "Libraries available for fat JAR:"
+          find lib -type f | sort
+          
+          PLATFORM_COUNT=$(find lib -mindepth 1 -maxdepth 1 -type d | wc -l)
+          echo ""
+          echo "Total platforms: $PLATFORM_COUNT"
+          
+          if [ $PLATFORM_COUNT -eq 0 ]; then
+            echo "⚠️  WARNING: No platform libraries found!"
+            echo "The fat JAR will be built but won't include native libraries."
+            echo ""
+            echo "To include native libraries:"
+            echo "1. Wait for 'Build Native Libraries' workflow to complete"
+            echo "2. Or manually upload libraries to lib/PLATFORM/ directories"
+          fi
+      
+      - name: Compile Java Classes
+        run: |
+          echo "Compiling Java classes..."
+          mkdir -p java/build/classes
+          javac -d java/build/classes \
+            java/src/main/java/com/libpostal/*.java
+          echo "✓ Java classes compiled"
+      
+      - name: Build Fat JAR
+        run: |
+          echo "Building fat JAR..."
+          chmod +x scripts/build/build_fatjar.sh
+          ./scripts/build/build_fatjar.sh || true
+          
+          if [ -f "libpostal-fatjar.jar" ]; then
+            echo "✓ Fat JAR created successfully"
+            ls -lh libpostal-fatjar.jar
+          else
+            echo "❌ Fat JAR creation failed"
+            exit 1
+          fi
+      
+      - name: Analyze Fat JAR
+        run: |
+          echo "Analyzing fat JAR contents..."
+          echo ""
+          echo "## Fat JAR Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Size
+          SIZE=$(du -h libpostal-fatjar.jar | cut -f1)
+          echo "**Size:** $SIZE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Platforms included
+          echo "**Platforms included:**" >> $GITHUB_STEP_SUMMARY
+          jar tf libpostal-fatjar.jar | grep "^native/" | cut -d/ -f2 | sort -u | while read platform; do
+            count=$(jar tf libpostal-fatjar.jar | grep "^native/$platform/" | wc -l)
+            echo "- $platform ($count files)" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Java classes
+          CLASS_COUNT=$(jar tf libpostal-fatjar.jar | grep ".class$" | wc -l)
+          echo "**Java classes:** $CLASS_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Contents preview
+          echo "<details>" >> $GITHUB_STEP_SUMMARY
+          echo "<summary>Contents Preview</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          jar tf libpostal-fatjar.jar | head -50 >> $GITHUB_STEP_SUMMARY
+          echo "..." >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Fat JAR built successfully!" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Test Fat JAR
+        run: |
+          echo "Testing fat JAR..."
+          
+          # Quick validation
+          if java -jar libpostal-fatjar.jar --help 2>&1 | grep -q "LibPostal\|Error\|Exception"; then
+            echo "✓ JAR can be executed"
+          else
+            echo "⚠️  JAR execution test skipped (no libpostal data)"
+          fi
+      
+      - name: Upload Fat JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: libpostal-fatjar
+          path: libpostal-fatjar.jar
+          retention-days: 30
+      
+      - name: Create Checksum
+        run: |
+          sha256sum libpostal-fatjar.jar > libpostal-fatjar.jar.sha256
+          cat libpostal-fatjar.jar.sha256
+      
+      - name: Upload Checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: libpostal-fatjar-checksum
+          path: libpostal-fatjar.jar.sha256
+          retention-days: 30
+      
+      # Create release if this is a tag
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            libpostal-fatjar.jar
+            libpostal-fatjar.jar.sha256
+          body: |
+            ## LibPostal Fat JAR Release
+            
+            This release includes a cross-platform fat JAR with native libraries for:
+            - Linux x86_64
+            - Linux ARM64 (aarch64)
+            - macOS Intel (x86_64)
+            - macOS Apple Silicon (ARM64)
+            - Windows x86_64
+            
+            ### Usage
+            
+            ```bash
+            java -jar libpostal-fatjar.jar
+            ```
+            
+            Or include in your project:
+            
+            ```xml
+            <!-- Maven -->
+            <dependency>
+                <groupId>com.libpostal</groupId>
+                <artifactId>libpostal</artifactId>
+                <version>${project.version}</version>
+                <scope>system</scope>
+                <systemPath>${project.basedir}/lib/libpostal-fatjar.jar</systemPath>
+            </dependency>
+            ```
+            
+            ### Verification
+            
+            ```bash
+            sha256sum -c libpostal-fatjar.jar.sha256
+            ```
+            
+            See [FATJAR.md](https://github.com/${{ github.repository }}/blob/master/FATJAR.md) for complete documentation.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

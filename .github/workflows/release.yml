@@ -1,0 +1,308 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  # Build native libraries for all platforms
+  build-natives:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x86_64
+            arch: x64
+          - os: ubuntu-latest
+            platform: linux-aarch64
+            arch: arm64
+          - os: macos-13
+            platform: macos-x86_64
+            arch: x64
+          - os: macos-14
+            platform: macos-aarch64
+            arch: arm64
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      
+      - name: Install Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y autoconf automake libtool pkg-config curl build-essential
+      
+      - name: Install Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install autoconf automake libtool pkg-config
+      
+      - name: Set JAVA_HOME
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+          else
+            echo "JAVA_HOME=$(/usr/libexec/java_home)" >> $GITHUB_ENV
+          fi
+      
+      - name: Build for ARM64 (Cross-compile)
+        if: matrix.arch == 'arm64' && matrix.platform == 'linux-aarch64'
+        run: |
+          docker run --rm --platform linux/arm64 \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            arm64v8/ubuntu:22.04 \
+            bash -c "
+              apt-get update && \
+              apt-get install -y autoconf automake libtool pkg-config curl build-essential openjdk-11-jdk && \
+              export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64 && \
+              chmod +x scripts/build/build_jni_optimized.sh && \
+              ./scripts/build/build_jni_optimized.sh <<< ''
+            "
+      
+      - name: Build for x86_64
+        if: matrix.arch == 'x64'
+        run: |
+          chmod +x scripts/build/build_jni_optimized.sh
+          ./scripts/build/build_jni_optimized.sh <<< ""
+      
+      - name: Package Native Libraries
+        run: |
+          mkdir -p release/${{ matrix.platform }}
+          
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            cp lib/libpostal.so* release/${{ matrix.platform }}/ 2>/dev/null || true
+            cp lib/libpostal_jni.so release/${{ matrix.platform }}/
+          else
+            cp lib/libpostal*.dylib release/${{ matrix.platform }}/
+          fi
+          
+          # Create tarball
+          cd release
+          tar czf libpostal-${{ matrix.platform }}.tar.gz ${{ matrix.platform }}/
+          sha256sum libpostal-${{ matrix.platform }}.tar.gz > libpostal-${{ matrix.platform }}.tar.gz.sha256
+      
+      - name: Upload Platform Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.platform }}
+          path: |
+            release/libpostal-${{ matrix.platform }}.tar.gz
+            release/libpostal-${{ matrix.platform }}.tar.gz.sha256
+          retention-days: 30
+
+  # Build fat JAR with all native libraries
+  build-fatjar:
+    needs: build-natives
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      
+      - name: Download All Native Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: native-artifacts
+      
+      - name: Extract and Organize Libraries
+        run: |
+          mkdir -p lib
+          
+          for artifact in native-artifacts/native-*; do
+            platform=$(basename $artifact | sed 's/native-//')
+            echo "Processing $platform..."
+            
+            # Extract tarball
+            cd $artifact
+            tar xzf libpostal-$platform.tar.gz
+            cd -
+            
+            # Copy to lib directory
+            mkdir -p lib/$platform
+            cp $artifact/$platform/* lib/$platform/
+            
+            echo "✓ $platform libraries organized"
+          done
+          
+          echo ""
+          echo "All platforms:"
+          ls -lh lib/*/
+      
+      - name: Build Fat JAR
+        run: |
+          chmod +x scripts/build/build_fatjar.sh
+          ./scripts/build/build_fatjar.sh
+      
+      - name: Verify Fat JAR
+        run: |
+          echo "Fat JAR contents:"
+          jar tf libpostal-fatjar.jar | grep -E "(\.class|native/)" | head -30
+          
+          echo ""
+          echo "Platforms included:"
+          jar tf libpostal-fatjar.jar | grep "^native/" | cut -d/ -f2 | sort -u
+          
+          echo ""
+          echo "Size:"
+          ls -lh libpostal-fatjar.jar
+      
+      - name: Create Checksum
+        run: |
+          sha256sum libpostal-fatjar.jar > libpostal-fatjar.jar.sha256
+      
+      - name: Upload Fat JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: libpostal-fatjar
+          path: |
+            libpostal-fatjar.jar
+            libpostal-fatjar.jar.sha256
+          retention-days: 30
+
+  # Create GitHub Release
+  create-release:
+    needs: [build-natives, build-fatjar]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+      
+      - name: Organize Release Files
+        run: |
+          mkdir -p release-files
+          
+          # Copy fat JAR
+          cp release-artifacts/libpostal-fatjar/libpostal-fatjar.jar release-files/
+          cp release-artifacts/libpostal-fatjar/libpostal-fatjar.jar.sha256 release-files/
+          
+          # Copy native tarballs
+          for platform in linux-x86_64 linux-aarch64 macos-x86_64 macos-aarch64; do
+            if [ -d "release-artifacts/native-$platform" ]; then
+              cp release-artifacts/native-$platform/*.tar.gz* release-files/
+            fi
+          done
+          
+          ls -lh release-files/
+      
+      - name: Generate Release Notes
+        run: |
+          cat > RELEASE_NOTES.md << 'EOF'
+          ## LibPostal Release
+          
+          ### Fat JAR (Recommended)
+          
+          **libpostal-fatjar.jar** - Single JAR with native libraries for all platforms
+          
+          - ✅ Linux x86_64
+          - ✅ Linux ARM64 (aarch64)
+          - ✅ macOS Intel (x86_64)
+          - ✅ macOS Apple Silicon (M1/M2)
+          - ✅ Windows x86_64 (experimental)
+          
+          #### Usage
+          
+          ```bash
+          java -jar libpostal-fatjar.jar
+          ```
+          
+          Or include in your project:
+          
+          ```java
+          import com.libpostal.LibPostal;
+          
+          // Libraries load automatically!
+          LibPostal.setup();
+          LibPostal.setupParser();
+          
+          AddressParserResponse result = 
+              LibPostal.parseAddress("123 Main St, New York, NY", "us");
+          ```
+          
+          ### Platform-Specific Builds
+          
+          If you prefer smaller downloads, use platform-specific tarballs:
+          
+          - `libpostal-linux-x86_64.tar.gz` - Linux x86_64
+          - `libpostal-linux-aarch64.tar.gz` - Linux ARM64
+          - `libpostal-macos-x86_64.tar.gz` - macOS Intel
+          - `libpostal-macos-aarch64.tar.gz` - macOS Apple Silicon
+          
+          #### Extraction
+          
+          ```bash
+          tar xzf libpostal-linux-x86_64.tar.gz
+          export LD_LIBRARY_PATH=$PWD/linux-x86_64:$LD_LIBRARY_PATH
+          ```
+          
+          ### Verification
+          
+          All files include SHA256 checksums:
+          
+          ```bash
+          sha256sum -c libpostal-fatjar.jar.sha256
+          ```
+          
+          ### Documentation
+          
+          - [Fat JAR Guide](https://github.com/${{ github.repository }}/blob/master/java/docs/FATJAR.md)
+          - [Quick Start](https://github.com/${{ github.repository }}/blob/master/java/docs/FATJAR_QUICK.md)
+          - [Build Methods](https://github.com/${{ github.repository }}/blob/master/java/docs/BUILD_METHODS.md)
+          - [Optimization](https://github.com/${{ github.repository }}/blob/master/java/docs/OPTIMIZATION.md)
+          
+          ### Build Information
+          
+          - **Optimization:** Size-optimized (`-Os` + LTO + stripped)
+          - **Java Version:** 11
+          - **Build Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Commit:** ${{ github.sha }}
+          EOF
+          
+          cat RELEASE_NOTES.md
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-files/*
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Release Summary
+        run: |
+          echo "## Release Created Successfully! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${GITHUB_REF#refs/tags/}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Files:**" >> $GITHUB_STEP_SUMMARY
+          ls -lh release-files/ | tail -n +2 | awk '{print "- "$9" ("$5")"}' >> $GITHUB_STEP_SUMMARY

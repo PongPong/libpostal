@@ -1,50 +1,47 @@
-# LibPostal Java JNI Wrapper
+# Java/JNI Bindings for libpostal
 
-This directory contains Java bindings for libpostal using JNI (Java Native Interface).
+This directory contains Java bindings and utilities for libpostal.
 
-## Building
+## Documentation
 
-### Prerequisites
+- [docs/BUILD_METHODS.md](docs/BUILD_METHODS.md) - Comparison of different build methods
+- [docs/BUILD_COMPARISON.md](docs/BUILD_COMPARISON.md) - Build performance comparison
+- [docs/OPTIMIZATION.md](docs/OPTIMIZATION.md) - Optimization strategies for size and performance
+- [docs/ZIG_BUILD.md](docs/ZIG_BUILD.md) - Detailed Zig build system documentation
+- [docs/ZIG_QUICK.md](docs/ZIG_QUICK.md) - Quick start guide for Zig builds
+- [docs/FATJAR.md](docs/FATJAR.md) - Detailed fat JAR build documentation
+- [docs/FATJAR_QUICK.md](docs/FATJAR_QUICK.md) - Quick start guide for fat JAR
 
-1. Install Zig (0.11 or later): https://ziglang.org/download/
-2. JDK 8 or later installed
-3. Set `JAVA_HOME` environment variable
+## Build Scripts
 
-### Build with Zig
+Build scripts are located in `../scripts/build/`:
 
-Build for your current platform:
+- `build_zig.sh` - Build native libraries using Zig
+- `build_jni.sh` - Build JNI wrappers
+- `build_jni_optimized.sh` - Build optimized JNI wrappers
+- `build_jni_simple.sh` - Simple JNI build
+- `build_fatjar.sh` - Build cross-platform fat JAR
+- `organize_libs.sh` - Organize built libraries
 
-```bash
-zig build
-```
+## Quick Start
 
-Build for all supported platforms (cross-compilation):
+### Build Native Library with Zig
 
-```bash
-zig build cross
-```
-
-This will create shared libraries in `zig-out/lib/`:
-- `libpostal.so` / `libpostal.dylib` / `postal.dll` - Core libpostal library
-- `libpostal_jni.so` / `libpostal_jni.dylib` / `postal_jni.dll` - JNI wrapper
-
-### Compile Java Classes
-
-```bash
-cd java
-javac -d build/classes src/main/java/com/libpostal/*.java
-```
-
-### Create JAR
+From the repository root:
 
 ```bash
-cd java
-jar cf libpostal.jar -C build/classes .
+./scripts/build/build_zig.sh
 ```
 
-## Usage
+### Build Fat JAR
 
-### Basic Example
+From the repository root:
+
+```bash
+./scripts/build/build_fatjar.sh
+```
+
+### Basic Usage
 
 ```java
 import com.libpostal.LibPostal;
@@ -65,60 +62,13 @@ for (int i = 0; i < response.components.length; i++) {
     System.out.println(response.labels[i] + ": " + response.components[i]);
 }
 
-// Or use map interface
-var map = response.toMap();
-System.out.println("Road: " + map.get("road"));
-
 // Cleanup
 LibPostal.teardownParser();
 LibPostal.teardown();
 ```
 
-### More Examples
+## Examples
 
-For complete working examples, see the `examples/` directory:
+See the `examples/` directory for complete working examples.
 
-```bash
-cd examples
-./run_example.sh
-```
-
-Examples include:
-- Basic address parsing
-- Address expansion
-- Multiple country formats
-- Map interface usage
-- Batch processing
-
-See `examples/README.md` for details.
-
-## Library Path
-
-Make sure the native libraries are in your Java library path:
-
-### Linux/macOS
-```bash
-export LD_LIBRARY_PATH=/path/to/zig-out/lib:$LD_LIBRARY_PATH
-# or for macOS
-export DYLD_LIBRARY_PATH=/path/to/zig-out/lib:$DYLD_LIBRARY_PATH
-
-java -Djava.library.path=/path/to/zig-out/lib -cp libpostal.jar YourApp
-```
-
-### Windows
-```cmd
-set PATH=C:\path\to\zig-out\lib;%PATH%
-java -Djava.library.path=C:\path\to\zig-out\lib -cp libpostal.jar YourApp
-```
-
-## Cross-Compilation Targets
-
-The Zig build supports the following targets:
-- Linux x86_64
-- Linux aarch64 (ARM64)
-- macOS x86_64
-- macOS aarch64 (Apple Silicon)
-- Windows x86_64
-- Windows aarch64
-
-Each target will produce architecture-specific binaries in `zig-out/lib/`.
+See the documentation files above for more details.

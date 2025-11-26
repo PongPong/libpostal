@@ -119,6 +119,7 @@ zig-cache/
 # Java/JNI build artifacts
 *.class
 *.jar
+!libpostal-fatjar.jar
 java/build/
 java/target/
 examples/build/

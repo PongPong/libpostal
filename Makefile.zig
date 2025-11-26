@@ -16,12 +16,14 @@ help:
 	@echo "  clean      - Remove build artifacts"
 	@echo "  install    - Install libraries (requires sudo)"
 	@echo "  test       - Run unit tests"
+	@echo "  fatjar     - Build cross-platform fat JAR"
 	@echo "  example    - Run Java example"
 	@echo ""
 	@echo "Usage:"
 	@echo "  make all       # Build everything"
 	@echo "  make cross     # Cross-compile for all platforms"
 	@echo "  make test      # Run unit tests"
+	@echo "  make fatjar    # Build fat JAR with native libraries"
 	@echo "  make example   # Run example program"
 
 # Build native libraries
@@ -49,6 +51,11 @@ java:
 test: all
 	@echo "Running unit tests..."
 	./run_tests.sh
+
+# Build fat JAR
+fatjar: all
+	@echo "Building cross-platform fat JAR..."
+	./build_fatjar.sh
 
 # Run example
 example: all

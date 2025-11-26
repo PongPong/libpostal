@@ -3,9 +3,8 @@ package com.libpostal;
 public class LibPostal {
     
     static {
-        // Load native libraries
-        System.loadLibrary("postal");
-        System.loadLibrary("postal_jni");
+        // Load native libraries (from JAR or system path)
+        NativeLoader.loadLibraries();
     }
 
     // Setup and teardown methods
